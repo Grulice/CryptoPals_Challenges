@@ -36,6 +36,7 @@ def get_score(freq_dict: dict, ref_dict: dict):
 
 
 def sxor(s1, s2):
+    """XOR two strings; returns a string"""
     # convert strings to a list of character pair tuples
     # go through each tuple, converting them to ASCII code (ord)
     # perform exclusive or on the ASCII code
@@ -50,9 +51,10 @@ cipher_string = hex_to_str(CIPHER_HEX)
 plaintexts = []
 
 for ref_char in freq_reference:
-    cur_plaintext = sxor(ref_char*len(cipher_string), cipher_string)
-    cur_candidate_freq = get_char_freq_dict(cur_plaintext)
-    plaintexts.append((ref_char, cur_plaintext, get_score(cur_candidate_freq, freq_reference)))
+    cur_key = ref_char*len(cipher_string)
+    cur_plaintext = sxor(cipher_string, cur_key)
+    cur_plaintext_freq = get_char_freq_dict(cur_plaintext)
+    plaintexts.append((ref_char, cur_plaintext, get_score(cur_plaintext_freq, freq_reference)))
 
 for plaintext in sorted(plaintexts, key=lambda x: x[2]):
     print(plaintext)
