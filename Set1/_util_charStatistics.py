@@ -22,8 +22,10 @@ total_chars = len(source_str)
 
 ranked_file_name = "{0}/{1}_chFreqRANKED{2}".format(path.split(FILE_PATH)[0], path.basename(FILE_PATH).split('.')[0], '.txt')
 ranked_file = open(ranked_file_name, mode='w', encoding='utf-8')
-for key, value in sorted(frequency.items(), key=lambda val: val[1], reverse=True):
-    cur_val_str = "{0}:{1}\n".format(key, value*100/total_chars)
-    print(cur_val_str)
-    ranked_file.write(cur_val_str)
+
+ranked_file.write(repr(sorted(frequency.items(), key=lambda val: val[1], reverse=True)))
+# for key, value in sorted(frequency.items(), key=lambda val: val[1], reverse=True):
+#     cur_val_str = "{0}:{1}\n".format(key, value*100/total_chars)
+#     print(cur_val_str)
+#     ranked_file.write(cur_val_str)
 ranked_file.close()
