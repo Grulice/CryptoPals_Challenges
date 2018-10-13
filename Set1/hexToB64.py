@@ -2,7 +2,7 @@ import string
 
 
 def hex_to_b64(string_hex: str):
-    """Converts the string representation of a hex number to Base64; returns a string"""
+    """Convert the string representation of a hex number to Base64; return a string"""
     # convert hex string to a Python number
     num_hex = int(string_hex, 16)
 
