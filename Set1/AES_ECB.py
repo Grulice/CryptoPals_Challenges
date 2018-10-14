@@ -18,10 +18,11 @@ def score_likeECB(ciph: bytearray):
 
 
 # Detect AES ECB
-with open('./assets/8.txt', mode='r') as f:
-    hex_lines = f.readlines()
-byte_lines = [binascii.a2b_hex(x.strip()) for x in hex_lines]
-byte_lines.sort(key=score_likeECB, reverse=True)
+if __name__ == '__main__':
+    with open('./assets/8.txt', mode='r') as f:
+        hex_lines = f.readlines()
+    byte_lines = [binascii.a2b_hex(x.strip()) for x in hex_lines]
+    byte_lines.sort(key=score_likeECB, reverse=True)
 
-for byte_line in byte_lines:
-    print(f"ECB likeness score: {score_likeECB(byte_line)}\nbytes:\n {byte_line}\nhex:\n {binascii.b2a_hex(byte_line)}\n=====================")
+    for byte_line in byte_lines:
+        print(f"ECB likeness score: {score_likeECB(byte_line)}\nbytes:\n {byte_line}\nhex:\n {binascii.b2a_hex(byte_line)}\n=====================")
