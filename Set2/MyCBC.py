@@ -17,6 +17,10 @@ def AES_CBC_decrypt(ciph: bytearray, iv: bytearray, k: bytearray):
         prev_ciph = chunk
     return decrypted
 
+
+
+
+
 if __name__ == '__main__':
     with open('./assets/10.txt', mode='r') as f:
         cipher_bytes = binascii.a2b_base64(f.read())
