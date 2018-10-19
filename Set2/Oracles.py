@@ -18,7 +18,7 @@ def CBC_ECB_roulette(plaintext: bytearray):
     pt = b'0' * random.randint(5, 10) \
          + plaintext + \
          b'0' * random.randint(5, 10)
-    # Pad plaintext for CBC
+    # Pad plaintext to nearest multiple of 16 bytes
     l_pt = len(pt)
     padwidth = l_pt // 16 if l_pt % 16 == 0 else l_pt // 16 + 1
     pt = PKCS7_Padding.rpad_my_shit(pt, width=16 * padwidth)
@@ -35,7 +35,7 @@ def CBC_ECB_roulette(plaintext: bytearray):
 
 
 def is_ECB(encryptor):
-    """Detect if the encryptor function is encrypting in ECB mode"""
+    """Detect if the encryptor function is encrypting in ECB mode. All Hail the Mighty Oracle function!"""
     ciphertext, is_CBC = encryptor(b'A' * 48)
     return True if AES_ECB.score_likeECB(ciphertext) else False, is_CBC
 
