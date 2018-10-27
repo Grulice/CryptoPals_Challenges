@@ -1,5 +1,5 @@
 from Crypto.Cipher import AES
-from Set1 import My_AES_ECB
+from Set1 import AES_ECB
 import binascii
 
 
@@ -12,11 +12,10 @@ def AES_CBC_decrypt(ciph: bytearray, iv: bytearray, k: bytearray):
     decrypted = bytearray()
     prev_ciph = iv
     for chunk in chunked_ciph:
-        chunk_decrypted = My_AES_ECB.decrypt(key=k, ciphertext=chunk)
+        chunk_decrypted = AES_ECB.AES_ECB_decrypt(key=k, ciphertext=chunk)
         decrypted.extend(xor(chunk_decrypted, prev_ciph))
         prev_ciph = chunk
     return decrypted
-
 
 if __name__ == '__main__':
     with open('./assets/10.txt', mode='r') as f:
