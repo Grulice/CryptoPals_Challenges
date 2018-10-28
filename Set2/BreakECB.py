@@ -1,5 +1,4 @@
 from Crypto.Cipher import AES
-from Set1 import AES_ECB
 from Set2 import Oracles, PKCS7_Padding
 import binascii
 

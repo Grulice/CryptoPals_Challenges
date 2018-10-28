@@ -1,5 +1,5 @@
 from Crypto.Cipher import AES
-from Set1 import AES_ECB
+from Set1 import My_AES_ECB
 from Set2 import PKCS7_Padding
 import random
 
@@ -37,7 +37,7 @@ def CBC_ECB_roulette(plaintext: bytearray):
 def is_ECB(encryptor):
     """Detect if the encryptor function is encrypting in ECB mode. All Hail the Mighty Oracle function!"""
     ciphertext, is_CBC = encryptor(b'A' * 48)
-    return True if AES_ECB.score_likeECB(ciphertext) else False, is_CBC
+    return True if My_AES_ECB.score_likeECB(ciphertext) else False, is_CBC
 
 
 if __name__ == '__main__':
