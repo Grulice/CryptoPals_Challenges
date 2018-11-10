@@ -7,7 +7,7 @@ import random
 def rand_key():
     """Return random 16 byte bytearray for a random AES Key.
     __NOT CRYPTO SECURE__"""
-    return bytearray([random.randint(0, 255) for _ in range(0, 16)])
+    return bytearray([random.randint(0, 256) for _ in range(0, 16)])
 
 
 def CBC_ECB_roulette(plaintext: bytearray):

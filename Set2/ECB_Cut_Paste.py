@@ -1,6 +1,7 @@
 from Crypto.Cipher import AES
 from Set2 import Oracles, PKCS7_Padding
 
+# Generate a random key to be used for encryption and decryption
 KEY = Oracles.rand_key()
 
 
@@ -11,9 +12,11 @@ class User:
         self.role = role
 
     def __str__(self):
+        # pretty printing
         return f"email: {self.email}\nuid: {self.uid}\nrole: {self.role}"
 
     def __repr__(self):
+        # user-string representation (encoding) for the User object
         return f"email={self.email}&uid={self.uid}&role={self.role}"
 
 
@@ -31,12 +34,12 @@ def profile_for(email: str):
     escaped_email = email.replace("&", "").replace("=", "")  # eat up the meta characters
 
     enc_suite = AES.new(mode=AES.MODE_ECB, key=KEY)
-    usr_encoded = repr(User(email=escaped_email, uid=10, role="user")).encode()
+    usr_encoded = repr(User(email=escaped_email, uid=10, role="user")).encode()  # create user-string
 
     # Pad plaintext
     usr_encoded = PKCS7_Padding.getw_and_rpad(usr_encoded)
 
-    return enc_suite.encrypt(usr_encoded)
+    return enc_suite.encrypt(usr_encoded)  # return encrypted user-string
 
 
 def decrypt_parse(ciph: bytearray):
@@ -49,6 +52,12 @@ def decrypt_parse(ciph: bytearray):
 if __name__ == '__main__':
     # SHENANIGANS HAPPENS HERE
 
+    # Note that we only use inputs for profile_for() to get valid ct's and only make
+    # manipulations with the ct's resulting from that function call.
+    # I.e., we don't even know the key that is used for encryption,
+    # we just have access to the function that creates and encrypts
+    # user profiles based on provided email address
+
     # Phase 1:
     # Get valid encryption for the string "admin" in a new block
     admin_pad_email = b"a" * 10 + PKCS7_Padding.getw_and_rpad(b'admin')
@@ -58,10 +67,15 @@ if __name__ == '__main__':
     # Substitute the last block for a profilefor() output with the ct from previous block
     hackerman_email = 'memes@mem.com'  # 13 bytes long
     orig_encr = profile_for(hackerman_email)
+    # Final encrypted string consists of:
+    # First 2 blocks from the original ct (last block containing the "user" role is omitted)
+    # followed by the 1-block ct ("admin"+padding) from Phase 1
     hackerman_encr = orig_encr[:32] + admin_block_encr
 
     # check if we got valid ct with our email as admin
     print(decrypt_parse(hackerman_encr))
+
+
     # ######################################################################################################################################################
     # ######################################################################################################################################################
     # ######################################################################################################################################################
@@ -105,5 +119,3 @@ if __name__ == '__main__':
     # ######################################################################################################################################################
     # ######################################################################################################################################################
 
-
-    pass
