@@ -10,7 +10,9 @@ dXN0IHRvIHNheSBoaQpEaWQgeW91IHN0b3A/IE5vLCBJIGp1c3QgZHJvdmUg
 YnkK"""))
 KEY = Oracles.rand_key()
 # Generate random prefix of random length (1-64 bytes)
-RAND_PREFIX = bytearray([random.randint(0, 256) for _ in range(0, random.randint(1, 64))])
+RAND_PREFIX = bytearray([random.randint(0, 255) for _ in range(0, random.randint(1, 64))])
+padding = b'a'*32
+repeat_lastindex = 0
 
 
 def AES_128_ECB(myPT: bytearray = b''):
@@ -25,15 +27,37 @@ def AES_128_ECB(myPT: bytearray = b''):
     return enc_suite.encrypt(pt)
 
 
+def has_repeatblocks(ct: bytearray):
+    """Find out if the input bytearray has (at least) 2 consecutive identical 16 byte blocks"""
+    for i in range(0, len(ct) - 1, 16):
+        chunk1 = ct[i   : i+16]
+        chunk2 = ct[i+16: i+32]
+        if chunk1 == chunk2:
+            return i+32
+    return 0
+
+
+def find_padding(encryptor):
+    global padding
+    global repeat_lastindex
+    for i in range(16):
+        curr_ct = encryptor(padding)
+        lastind = has_repeatblocks(curr_ct)
+        if lastind:
+            repeat_lastindex = lastind
+            return
+        padding += b'a'
+    return None
+
+
+def encrypt_wrapper(input = b''):
+    ct = AES_128_ECB(padding + input)
+    return ct[repeat_lastindex:]
+
+
 def break_cipher(encryptor, blocksize: int):
     """Do byte-at-a-time decryption on the given encryptor function, using given blocksize"""
     # TODO: Write comments for this function
-
-    # --Find the last index of the block that the random prefix ends at.
-
-    # Start with padding equal to two full blocks
-    padding = b'a' * (blocksize * 2)
-
 
     deciphered_bytes = b''  # initialize the result variable to be able to use it when it's empty
 
@@ -53,5 +77,8 @@ def break_cipher(encryptor, blocksize: int):
 
 
 if __name__ == '__main__':
-    broken = break_cipher(AES_128_ECB, 16)
+    find_padding(AES_128_ECB)
+    print(padding, len(padding), repeat_lastindex)
+
+    broken = break_cipher(encrypt_wrapper, 16)
     print(broken.decode())
